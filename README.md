@@ -1,4 +1,4 @@
-Usenet Scraping Project
+<h1 style="text-align: center;"><strong>Usenet Scraping Project</strong></h1>
 
 Two simple python codes that scrape the google groups Usenet archive for thread and comment metadata.
 
