@@ -1,4 +1,5 @@
 import csv
+import os  # Ensure the os module is imported
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -8,7 +9,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import time
-
 
 def main():
     # Setup Chrome options
@@ -21,12 +21,19 @@ def main():
     driver = webdriver.Chrome(service=service, options=options)
 
     # Open the target webpage
-    newsgroup_url = "https://groups.google.com/g/net.motss"
+    newsgroup_url = "https://groups.google.com/g/net.news" #insert the link to the groupgroup here
     driver.get(newsgroup_url)
 
     # Extract newsgroup name and format it for filename
     newsgroup = newsgroup_url.split("/g/")[1].replace('.', '')
     csv_filename = f"{newsgroup}_threads.csv"
+
+    # Ensure the output directory exists
+    output_directory = '[INSERT FILE DIRECTORY PATH HERE]'
+    os.makedirs(output_directory, exist_ok=True)
+
+    # Determine the full output file path
+    output_filepath = os.path.join(output_directory, csv_filename)
 
     # Initialize list to store all thread data
     all_threads = []
@@ -102,16 +109,15 @@ def main():
         print(f"An error occurred while navigating pages or processing data: {e}")
     finally:
         # Save all collected thread data to a CSV file
-        with open(csv_filename, 'w', newline='', encoding='utf-8') as file:
+        with open(output_filepath, 'w', newline='', encoding='utf-8') as file:
             writer = csv.writer(file)
             writer.writerow(['ThreadID', 'Thread Title', 'URL', 'Date', 'Number of Messages'])  # Write CSV header
             writer.writerows(all_threads)
 
-        print(f"Data successfully written to {csv_filename}")
+        print(f"Data successfully written to {output_filepath}")
 
         # Close the browser
         driver.quit()
-
 
 if __name__ == "__main__":
     main()
