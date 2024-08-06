@@ -27,6 +27,9 @@ def extract_comments(url, thread_id):
         text_tag = comment.find('div', class_='ptW7te')
         full_text = text_tag.get_text(separator='\n').strip() if text_tag else "No text"
 
+        # Extracting data-doc-id (url-string)
+        data_doc_id = comment.get('data-doc-id', 'Unknown')
+
         # Storing the extracted data
         comment_data = {
             'Thread ID': thread_id,
@@ -34,7 +37,8 @@ def extract_comments(url, thread_id):
             'Unique Comment ID': unique_comment_id,
             'Author': author_name,
             'Date and Time': date_time,
-            'Full Text': full_text
+            'Full Text': full_text,
+            'URL String': data_doc_id
         }
         comments_data.append(comment_data)
 
@@ -55,7 +59,8 @@ def process_csv(input_csv_path):
     # Determine the output CSV file name
     base_name = os.path.basename(input_csv_path)
     output_base_name = base_name.replace('_threads', '_comments')
-    output_csv_path = os.path.join(os.path.dirname(input_csv_path), output_base_name)
+    output_directory = '[INPUT YOUR FILE DIRECTORY HERE]'
+    output_csv_path = os.path.join(output_directory, output_base_name)
 
     # Iterate over each URL and collect comments
     all_comments = []
@@ -75,5 +80,5 @@ def process_csv(input_csv_path):
     print(f"Comments successfully saved to {output_csv_path}")
 
 # Example usage with the provided file path
-input_csv_path = 'netmotss_threads.csv'  # Replace with your actual path
+input_csv_path = '[INPUT CSV FILE PATH HERE]'  # Replace with your actual path
 process_csv(input_csv_path)
